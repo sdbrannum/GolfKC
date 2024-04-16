@@ -1,0 +1,30 @@
+@page
+@model Web.Views.Home.Index
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>KC Golf</title>
+    <environment exclude="Development">
+        <link rel="stylesheet" asp-href-include="~/assets/index*.css">
+    </environment>
+</head>
+<body>
+<div id="app"></div>
+<environment include="Development">
+    <script type="module" src="http://localhost:5173/@@vite/client"></script>
+    <script type="module" src="http://localhost:5173/src/main.ts"></script>
+</environment>
+<environment exclude="Development">
+    <script type="module" asp-src-include="~/assets/index*.js"></script>
+</environment>
+</body>
+</html>
