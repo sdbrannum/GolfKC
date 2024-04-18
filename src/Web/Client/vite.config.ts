@@ -8,8 +8,8 @@ export default defineConfig({
     vue(),
     // basicSsl()
   ],
-  build: {
-    outDir: '../wwwroot',
-    emptyOutDir: true
-  }
+  // build: {
+  //   outDir: '../wwwroot',
+  //   emptyOutDir: true
+  // }
 })
