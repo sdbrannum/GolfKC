@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,12 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Client\" />
+      <None Include="wwwroot\flag.png" />
+      <None Include="wwwroot\golfer.png" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\flag.png" />
-      <None Include="wwwroot\golfer.png" />
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
