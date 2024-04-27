@@ -1,3 +1,11 @@
-localhost
+// localhost
+// reverse_proxy web:8080
 
-reverse_proxy web:8080
+
+www.ohboy.dev {
+	redir https://ohboy.dev{uri}
+}
+
+ohboy.dev {
+    reverse_proxy web:8080
+}
