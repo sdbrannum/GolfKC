@@ -1,11 +1,10 @@
 services:
   web:
-    image: web
+    image: ghcr.io/sdbrannum/golfkc-web:latest
     restart: always
     build:
       context: ./src/Web
       dockerfile: Dockerfile
-      image: ghcr.io/sdbrannum/golfkc-web:latest
     expose:
       - 8080
   caddy:
