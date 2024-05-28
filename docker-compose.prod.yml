@@ -9,8 +9,6 @@ services:
     expose:
       - 8080
   caddy:
-    build:
-      image: ghcr.io/sdbrannum/golfkc-caddy:latest
     image: caddy:latest
     restart: unless-stopped
     ports:
