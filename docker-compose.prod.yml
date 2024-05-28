@@ -1,13 +1,16 @@
-﻿services:
+services:
   web:
     image: web
     restart: always
     build:
       context: ./src/Web
       dockerfile: Dockerfile
+      image: ghcr.io/sdbrannum/golfkc-web:latest
     expose:
       - 8080
   caddy:
+    build:
+      image: ghcr.io/sdbrannum/golfkc-caddy:latest
     image: caddy:latest
     restart: unless-stopped
     ports:
@@ -15,7 +18,7 @@
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile.dev
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
