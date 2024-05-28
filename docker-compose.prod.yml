@@ -1,6 +1,6 @@
-﻿services:
+services:
   web:
-    image: web
+    image: ghcr.io/sdbrannum/golfkc-web:latest
     restart: always
     build:
       context: ./src/Web
@@ -15,7 +15,7 @@
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile.dev
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
