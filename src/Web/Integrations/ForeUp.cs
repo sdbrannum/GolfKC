@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Web.Dtos;
 using Web.Mappers;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IForeUp : IGolfPlatform {}
 
@@ -21,9 +21,9 @@ public class ForeUp : IForeUp
         _courseOptions = courseOptions.Value;
     }
     
-    public Task<IEnumerable<Course>> GetCourses()
+    public IEnumerable<Course> GetCourses()
     {
-        var courses = _courseOptions.ForeUp.Select(c => new Course
+        return _courseOptions.ForeUp.Select(c => new Course
         {
             Id = c.Id,
             Name = c.Name,
@@ -31,7 +31,6 @@ public class ForeUp : IForeUp
             Uri = new Uri(string.Format(URI_COURSE, c.Id)),
             Source = Source.ForeUp
         });
-        return Task.FromResult(courses);
     }
 
     public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)

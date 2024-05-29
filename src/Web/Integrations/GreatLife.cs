@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Options;
 using Web.Dtos;
 using Web.Mappers;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IGreatLife : IGolfPlatform
 {
@@ -21,9 +21,9 @@ public class GreatLife : IGreatLife
         _courseOptions = courseOptions.Value;
     }
 
-    public Task<IEnumerable<Course>> GetCourses()
+    public IEnumerable<Course> GetCourses()
     {
-        var courses = _courseOptions.GreatLife.Select(c => new Course
+        return _courseOptions.GreatLife.Select(c => new Course
         {
             Id = c.Id,
             Name = c.Name,
@@ -31,18 +31,6 @@ public class GreatLife : IGreatLife
             Uri = new Uri($"https://golfback.com/#/course/{GREAT_LIFE_KC_ID}?courses={c.Id}"),
             Source = Source.GreatLife
         });
-        return Task.FromResult(courses);
-
-        // var greatLife = await GetCourseInfo(GREAT_LIFE_KC_ID);
-        //
-        // if (greatLife is not null)
-        // {
-        //     var tasks = greatLife.MultiCourseIds.Select(GetCourseInfo);
-        //     var courses = await Task.WhenAll(tasks);
-        //     return courses.Where(c => c is not null)!;
-        // }
-        //
-        // return Enumerable.Empty<GreatLifeCourse>();
     }
 
     private async Task<GreatLifeCourse?> GetCourseInfo(string courseId)

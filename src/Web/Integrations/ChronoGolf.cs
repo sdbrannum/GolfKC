@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Options;
 using Web.Dtos;
 using Web.Mappers;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IChronoGolf : IGolfPlatform
 {
@@ -20,9 +20,9 @@ public class ChronoGolf : IChronoGolf
         _courseOptions = courseOptions.Value;
     }
 
-    public Task<IEnumerable<Course>> GetCourses()
+    public IEnumerable<Course> GetCourses()
     {
-        var courses = _courseOptions.ChronoGolf.Select(c =>
+        return _courseOptions.ChronoGolf.Select(c =>
         {
             var course = _courseOptions.ChronoGolf.Single(cg => cg.Id == c.Id);
             var clubId = course.Id.Split('-')[0];
@@ -37,8 +37,6 @@ public class ChronoGolf : IChronoGolf
                 Source = Source.Chrono
             };
         });
-
-        return Task.FromResult(courses);
     }
 
     public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)

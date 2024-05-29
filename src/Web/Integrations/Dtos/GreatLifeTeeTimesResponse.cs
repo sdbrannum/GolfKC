@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Web.ServiceClients.Dtos;
+namespace Web.Integrations.Dtos;
 
 public class GreatLifeTeeTimesResponse
 {
@@ -10,10 +10,10 @@ public class GreatLifeTeeTimesResponse
 
 public class GreatLifeTeeTime
 {
-    public string Id { get; set; }
-    public string CourseId { get; set; }
-    public string CourseName { get; set; }
-    public string DateTime { get; set; }
+    public string Id { get; set; } = default!;
+    public string CourseId { get; set; } = default!;
+    public string CourseName { get; set; } = default!;
+    public string DateTime { get; set; } = default!;
     public DateTime LocalDateTime { get; set; }
     public IEnumerable<GreatLifeRate> Rates { get; set; }
     public bool IsAvailable { get; set; }
@@ -23,14 +23,14 @@ public class GreatLifeTeeTime
     public IEnumerable<PrimaryPrices> PrimaryPrices { get; set; }
     public int PlayersMin { get; set; }
     public int PlayersMax { get; set; }
-    public string PlayersDisplay { get; set; }
+    public string PlayersDisplay { get; set; } = default!;
 }
 
 public class GreatLifeRate
 {
-    public string RatePlanId { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string RatePlanId { get; set; } = default!;
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = default!;
     public int Holes { get; set; }
     public bool HasCartIncluded { get; set; }
     public bool IsPrimary { get; set; }

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Web.ServiceClients.Dtos;
+namespace Web.Integrations.Dtos;
 
 public sealed class OpenStreetsPlace
 {

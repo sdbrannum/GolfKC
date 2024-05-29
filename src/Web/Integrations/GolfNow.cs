@@ -2,9 +2,9 @@ using System.Globalization;
 using Microsoft.Extensions.Options;
 using Web.Dtos;
 using Web.Mappers;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IGolfNow : IGolfPlatform
 {
@@ -24,9 +24,9 @@ public class GolfNow : IGolfNow
         _courseOptions = courseOptions.Value;
     }
 
-    public Task<IEnumerable<Course>> GetCourses()
+    public IEnumerable<Course> GetCourses()
     {
-        var courses = _courseOptions.GolfNow.Select(c => new Course
+        return _courseOptions.GolfNow.Select(c => new Course
         {
             Id = c.Id,
             Name = c.Name,
@@ -34,21 +34,6 @@ public class GolfNow : IGolfNow
             Uri = new Uri("https://www.golfnow.com/"),
             Source = Source.GolfNow
         });
-        return Task.FromResult(courses);
-        // var response = await _httpClient.PostAsJsonAsync("api/tee-times/tee-time-results", new GolfNowFacilitiesRequest
-        // {
-        //     Radius = RADIUS,
-        //     Latitude = LATITUDE,
-        //     Longitude = LONGITUDE,
-        //     Date = formattedDate,
-        // });
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     var data = await response.Content.ReadFromJsonAsync<GolfNowResponse>();
-        //     return data?.Data.Facilities?.Select(CourseMapper.Map) ?? Enumerable.Empty<Course>();
-        // }
-        //
-        // return Enumerable.Empty<Course>();
     }
 
     public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)

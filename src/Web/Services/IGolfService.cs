@@ -1,6 +1,6 @@
 using Web.Dtos;
 
-namespace Web;
+namespace Web.Services;
 
 public interface IGolfService
 {

@@ -1,9 +1,9 @@
 using Web.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IGolfPlatform
 {
-    Task<IEnumerable<Course>> GetCourses();
+    IEnumerable<Course> GetCourses();
     Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date);
 }

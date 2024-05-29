@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Web;
 using Web.Dtos;
-using Web.ServiceClients;
+using Web.Integrations;
+using Web.Services;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,38 +59,28 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
-app.MapGet("/courses", async (IGolfService service) =>
+app.MapGet("/courses", [ResponseCache(Duration = 300)] async (IGolfService service) =>
         await service.GetCourses(DateOnly.FromDateTime(DateTime.Now.AddDays(3))))
     .WithName("courses")
     .WithOpenApi();
 
-app.MapGet("{source}/tee-times/{courseId}", async (Source source, string courseId, string date, IGolfService service) =>
+app.MapGet("{source}/tee-times/{courseId}", [ResponseCache(Duration = 60)] async (Source source, string courseId, string date, IGolfService service) =>
     {
         var d = DateOnly.Parse(date);
-        return await service.GetTeeTimes(source, courseId, d);
+
+        // loose date validations
+        if (d < DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)) ||
+            d > DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14)))
+        {
+            return Results.BadRequest("Date must be within 14 days of today.");
+        }
+        
+        var teeTimes = await service.GetTeeTimes(source, courseId, d);
+        return Results.Ok(teeTimes);
     })
     .WithName("tee-times")
     .WithOpenApi();
+
 app.MapRazorPages();
 app.Run();
 
