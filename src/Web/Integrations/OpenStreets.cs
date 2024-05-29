@@ -1,7 +1,7 @@
 using Web.Dtos;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
-namespace Web.ServiceClients;
+namespace Web.Integrations;
 
 public interface IOpenStreets
 {

@@ -1,4 +1,4 @@
-namespace Web.ServiceClients.Dtos;
+namespace Web.Integrations.Dtos;
 
 public class GolfNowFacilitiesRequest
 {

@@ -1,6 +1,6 @@
 using Web.Dtos;
 
-namespace Web.ServiceClients.Dtos;
+namespace Web.Integrations.Dtos;
 
 public sealed class GreatLifeCourseResponse
 {

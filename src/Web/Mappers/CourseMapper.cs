@@ -1,6 +1,6 @@
 using FastCache.Extensions;
 using Web.Dtos;
-using Web.ServiceClients.Dtos;
+using Web.Integrations.Dtos;
 
 namespace Web.Mappers;
 

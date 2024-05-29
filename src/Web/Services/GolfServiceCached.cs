@@ -1,6 +1,6 @@
 using Web.Dtos;
 
-namespace Web;
+namespace Web.Services;
 
 public class GolfServiceCached : IGolfService
 {
@@ -24,6 +24,6 @@ public class GolfServiceCached : IGolfService
         return await FastCache.Cached.GetOrCompute(
             $"{source}:{courseId}:times:{date.ToString("O")}", 
             (_) => _service.GetTeeTimes(source, courseId, date),
-            TimeSpan.FromMinutes(60));
+            TimeSpan.FromMinutes(3));
     }
 }

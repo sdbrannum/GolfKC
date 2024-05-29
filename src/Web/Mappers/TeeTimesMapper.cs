@@ -1,6 +1,6 @@
 using Web.Dtos;
-using Web.ServiceClients;
-using Web.ServiceClients.Dtos;
+using Web.Integrations;
+using Web.Integrations.Dtos;
 
 namespace Web.Mappers;
 

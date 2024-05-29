@@ -1,8 +1,8 @@
 using System.Globalization;
 using Web.Dtos;
-using Web.ServiceClients;
+using Web.Integrations;
 
-namespace Web;
+namespace Web.Services;
 
 public class GolfService : IGolfService
 {
@@ -36,11 +36,11 @@ public class GolfService : IGolfService
     public async Task<IEnumerable<Course>> GetCourses(DateOnly date)
     {
         var formattedDate = date.ToString("MMMM dd yyyy", new CultureInfo("en-us"));
-        var golfNowCourses = await _golfNow.GetCourses();
-        var foreUpCourses = await _foreUp.GetCourses();
-        var greatLifeCourses = await _greatLife.GetCourses();
-        var teeQuestCourses = await _teeQuest.GetCourses();
-        var chronoCourses = await _chronoGolf.GetCourses();
+        var golfNowCourses = _golfNow.GetCourses();
+        var foreUpCourses = _foreUp.GetCourses();
+        var greatLifeCourses = _greatLife.GetCourses();
+        var teeQuestCourses = _teeQuest.GetCourses();
+        var chronoCourses = _chronoGolf.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
             .Concat(greatLifeCourses)
