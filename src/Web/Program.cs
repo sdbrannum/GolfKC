@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.MapGet("/courses", async (IGolfService service) =>
+app.MapGet("/courses", [ResponseCache(Duration = 300)] async (IGolfService service) =>
         await service.GetCourses(DateOnly.FromDateTime(DateTime.Now.AddDays(3))))
     .WithName("courses")
     .WithOpenApi();
