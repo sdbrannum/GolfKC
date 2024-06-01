@@ -2,10 +2,10 @@
 // reverse_proxy web:8080
 
 
-www.ohboy.dev {
-	redir https://ohboy.dev{uri}
+www.golfkc.xyz {
+	redir https://golfkc.xyz{uri}
 }
 
-ohboy.dev {
+golfkc.xyz {
     reverse_proxy web:8080
 }
