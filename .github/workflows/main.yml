@@ -28,6 +28,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push images
-        run: docker compose -f docker-compose.yml push
+        run: docker compose -f docker-compose.action.yml push
       # - name: Test with the dotnet CLI
       #   run: dotnet test
