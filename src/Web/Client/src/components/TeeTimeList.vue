@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import TeeTimeCard from "./TeeTimeCard.vue";
 import { getTimes } from "../api";
 import TeeTimeCardSkeleton from "./TeeTimeCardSkeleton.vue";
@@ -8,10 +8,21 @@ const props = defineProps<{
     source: string;
     courseId: string;
     date: string | null;
+    players: string;
+    holes: string;
 }>();
 
 const loading = ref(false);
 const times = ref<TeeTime[]>([]);
+const filteredTimes = computed(() => {
+    return times.value.filter((time) => {
+        return (
+            (props.holes === "any" || time.holes.toString() === props.holes) &&
+            (props.players === "any" ||
+                time.players.toString() === props.players)
+        );
+    });
+});
 
 const loadTeeTimes = async () => {
     if (!props.date) {
@@ -46,18 +57,18 @@ const getTeeTimeKey = (teeTime: TeeTime) => {
                 :key="n"
             />
         </template>
-        <template v-else-if="times.length">
+        <template v-else-if="filteredTimes.length">
             <tee-time-card
                 class="mr-1"
-                v-for="teeTime in times"
+                v-for="teeTime in filteredTimes"
                 :key="getTeeTimeKey(teeTime)"
                 v-bind="teeTime"
             />
         </template>
         <template v-else>
             <li>
-                <span>No tee times found</span>
-                <span class="text-sm block text-slate-700"
+                <span>No tee times match your criteria</span>
+                <span class="text-sm block text-gray-300"
                     >Course may not allow booking past 5-7 days out</span
                 >
             </li>

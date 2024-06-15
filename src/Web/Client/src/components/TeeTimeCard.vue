@@ -19,10 +19,10 @@ const formatTimeForView = (time: string) => {
 
 <template>
     <li
-        class="rounded-md border border-slate-300 shadow text-nowrap overflow-hidden"
+        class="rounded-md border border-gray-300 shadow text-nowrap overflow-hidden"
         style="min-width: 120px"
     >
-        <div class="bg-slate-600 text-violet-50 px-1">
+        <div class="bg-brand-500 text-violet-50 px-1">
             <time class="text-lg font-semibold">
                 {{ formatTimeForView(time) }}
             </time>
