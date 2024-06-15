@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build images
-        run: docker compose -f docker-compose.prod.yml build
+        run: docker compose -f docker-compose.yml build
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
@@ -28,6 +28,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push images
-        run: docker compose -f docker-compose.prod.yml push
+        run: docker compose -f docker-compose.yml push
       # - name: Test with the dotnet CLI
       #   run: dotnet test
