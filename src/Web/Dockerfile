@@ -22,7 +22,8 @@ FROM build-service AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src/server
 COPY . .
-RUN dotnet publish "Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --arch linux/arm64/v8
+# RUN dotnet restore
+RUN dotnet publish "Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 RUN ls
 
 FROM base AS final
