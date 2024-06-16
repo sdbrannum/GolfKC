@@ -2,7 +2,7 @@ services:
   web:
     image: ghcr.io/sdbrannum/golfkc-web:latest
     restart: always
-    platform: linux/arm64/v8
+    platform: linux/arm64
     build:
       context: ./src/Web
       dockerfile: Dockerfile
