@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.19-arm64v8 AS base
+﻿FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
@@ -15,14 +15,14 @@ RUN pnpm install
 RUN pnpm build
 # RUN ls
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine3.19-arm64v8 AS build-service
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build-service
 ARG BUILD_CONFIGURATION=Release
 
 FROM build-service AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src/server
 COPY . .
-RUN dotnet publish "Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --arch linux/arm64/v8
 RUN ls
 
 FROM base AS final
