@@ -4,15 +4,15 @@ WORKDIR /app
 EXPOSE 8080
 # EXPOSE 8081
 
-FROM node:alpine as build-frontend
+FROM node:20-alpine as build-frontend
 WORKDIR /src/frontend
 COPY /Client .
 # RUN ls
 WORKDIR /src/frontend
 # RUN ls
-RUN sudo npm install -g pnpm
-RUN sudo pnpm install
-RUN sudo pnpm build
+RUN npm install -g pnpm
+RUN pnpm install
+RUN pnpm build
 # RUN ls
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build-service
