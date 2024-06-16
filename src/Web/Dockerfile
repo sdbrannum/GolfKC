@@ -10,9 +10,9 @@ COPY /Client .
 # RUN ls
 WORKDIR /src/frontend
 # RUN ls
-RUN npm install -g pnpm
-RUN pnpm install
-RUN pnpm build
+RUN sudo npm install -g pnpm
+RUN sudo pnpm install
+RUN sudo pnpm build
 # RUN ls
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build-service
