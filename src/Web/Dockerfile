@@ -4,7 +4,7 @@ WORKDIR /app
 EXPOSE 8080
 # EXPOSE 8081
 
-FROM arm64v8/node as build-frontend
+FROM node:22-alpine as build-frontend
 WORKDIR /src/frontend
 COPY /Client .
 # RUN ls
