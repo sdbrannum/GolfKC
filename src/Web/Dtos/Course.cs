@@ -13,7 +13,7 @@ public sealed class Course
 public enum Source
 {
     GolfNow = 1,
-    GreatLife = 2,
+    GolfBack = 2,
     TeeQuest = 3,
     Chrono = 4,
     ForeUp = 5,

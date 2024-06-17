@@ -2,12 +2,12 @@ using Web.Dtos;
 
 namespace Web.Integrations.Dtos;
 
-public sealed class GreatLifeCourseResponse
+public sealed class GolfBackCourseResponse
 {
-    public GreatLifeCourse Data { get; init; } = default!;
+    public GolfBackCourse Data { get; init; } = default!;
 }
 
-public sealed class GreatLifeCourse
+public sealed class GolfBackCourse
 {
     public string Id { get; init; } = default!;
     public IEnumerable<string> MultiCourseIds { get; init; } = default!;

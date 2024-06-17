@@ -2,20 +2,20 @@ using System.Text.Json.Serialization;
 
 namespace Web.Integrations.Dtos;
 
-public class GreatLifeTeeTimesResponse
+public class GolfBackTeeTimesResponse
 {
     [JsonPropertyName("data")]
-    public IEnumerable<GreatLifeTeeTime> TeeTimes { get; set; }
+    public IEnumerable<GolfBackTeeTime> TeeTimes { get; set; }
 }
 
-public class GreatLifeTeeTime
+public class GolfBackTeeTime
 {
     public string Id { get; set; } = default!;
     public string CourseId { get; set; } = default!;
     public string CourseName { get; set; } = default!;
     public string DateTime { get; set; } = default!;
     public DateTime LocalDateTime { get; set; }
-    public IEnumerable<GreatLifeRate> Rates { get; set; }
+    public IEnumerable<GolfBackRate> Rates { get; set; }
     public bool IsAvailable { get; set; }
     public IEnumerable<int> Holes { get; set; }
     public bool Has9Holes { get; set; }
@@ -26,7 +26,7 @@ public class GreatLifeTeeTime
     public string PlayersDisplay { get; set; } = default!;
 }
 
-public class GreatLifeRate
+public class GolfBackRate
 {
     public string RatePlanId { get; set; } = default!;
     public string Name { get; set; } = default!;

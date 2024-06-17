@@ -27,7 +27,7 @@ builder.Services.AddHttpClient<IGolfNow, GolfNow>(opt =>
     opt.BaseAddress = new Uri("https://www.golfnow.com");
 });
 
-builder.Services.AddHttpClient<IGreatLife, GreatLife>(opt =>
+builder.Services.AddHttpClient<IGolfBack, GolfBack>(opt =>
 {
     opt.BaseAddress = new Uri("https://api.golfback.com");
 });
