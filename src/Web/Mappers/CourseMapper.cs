@@ -22,14 +22,14 @@ public static class CourseMapper
         };
     }
 
-    public static Course Map(GreatLifeCourse glc)
+    public static Course Map(GolfBackCourse glc)
     {
         return new Course
         {
             Id = glc.Id,
             Name = glc.Name,
             // Photo = new Uri(glc.PhotoUrl),
-            Source = Source.GreatLife,
+            Source = Source.GolfBack,
             // Range = null,
             Address = new Address
             {

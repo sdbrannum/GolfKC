@@ -5,7 +5,7 @@ public class CourseOptions
     public const string Courses = "Courses";
 
     public IEnumerable<CourseOption> GolfNow { get; init; } = new List<CourseOption>();
-    public IEnumerable<CourseOption> GreatLife { get; init; } = new List<CourseOption>();
+    public IEnumerable<CourseOption> GolfBack { get; init; } = new List<CourseOption>();
     public IEnumerable<CourseOption> TeeQuest { get; init; } = new List<CourseOption>();
     
     public IEnumerable<CourseOption> ForeUp { get; init; } = new List<CourseOption>();

@@ -6,7 +6,7 @@ namespace Web.Services;
 
 public class GolfService : IGolfService
 {
-    private readonly IGreatLife _greatLife;
+    private readonly IGolfBack _golfBack;
     private readonly IGolfNow _golfNow;
     private readonly ITeeQuest _teeQuest;
     private readonly IChronoGolf _chronoGolf;
@@ -19,7 +19,7 @@ public class GolfService : IGolfService
     private readonly HashSet<string> _states = new() {"MO", "KS"};
 
     public GolfService(
-        IGreatLife greatLife,
+        IGolfBack golfBack,
         IGolfNow golfNow,
         ITeeQuest teeQuest,
         IChronoGolf chronoGolf,
@@ -27,7 +27,7 @@ public class GolfService : IGolfService
         IVermontSystems vermontSystems,
         IOpenStreets openStreets)
     {
-        _greatLife = greatLife;
+        _golfBack = golfBack;
         _golfNow = golfNow;
         _teeQuest = teeQuest;
         _chronoGolf = chronoGolf;
@@ -41,13 +41,13 @@ public class GolfService : IGolfService
         var formattedDate = date.ToString("MMMM dd yyyy", new CultureInfo("en-us"));
         var golfNowCourses = _golfNow.GetCourses();
         var foreUpCourses = _foreUp.GetCourses();
-        var greatLifeCourses = _greatLife.GetCourses();
+        var golfBackCourses = _golfBack.GetCourses();
         var teeQuestCourses = _teeQuest.GetCourses();
         var chronoCourses = _chronoGolf.GetCourses();
         var vermontSystemCourses = _vermontSystems.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
-            .Concat(greatLifeCourses)
+            .Concat(golfBackCourses)
             .Concat(teeQuestCourses)
             .Concat(chronoCourses)
             .Concat(vermontSystemCourses);
@@ -57,7 +57,7 @@ public class GolfService : IGolfService
     {
         return source switch
         {
-            Source.GreatLife => await _greatLife.GetTimes(courseId, date),
+            Source.GolfBack => await _golfBack.GetTimes(courseId, date),
             Source.GolfNow => await _golfNow.GetTimes(courseId, date),
             Source.Chrono => await _chronoGolf.GetTimes(courseId, date),
             Source.ForeUp => await _foreUp.GetTimes(courseId, date),

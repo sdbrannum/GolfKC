@@ -6,7 +6,7 @@ namespace Web.Mappers;
 
 public static class TeeTimesMapper
 {
-    public static TeeTime Map(GreatLifeTeeTime teeTime)
+    public static TeeTime Map(GolfBackTeeTime teeTime)
     {
         var rate = teeTime.Rates.First();
         return new TeeTime
