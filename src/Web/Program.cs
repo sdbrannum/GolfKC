@@ -43,6 +43,7 @@ builder.Services.AddHttpClient<IChronoGolf, ChronoGolf>(opt =>
 
 builder.Services.AddHttpClient<IForeUp, ForeUp>();
 
+builder.Services.AddScoped<IVermontSystems, VermontSystems>();
 builder.Services.AddScoped<ITeeQuest, TeeQuest>();
 builder.Services.AddScoped<IGolfService, GolfService>();
 builder.Services.Decorate<IGolfService, GolfServiceCached>();

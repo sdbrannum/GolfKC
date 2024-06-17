@@ -37,7 +37,7 @@ const formatTimeForView = (time: string) => {
                     <font-awesome-icon :icon="faUser" />
                     <span class="pl-1">{{ players }}</span>
                 </span>
-                <span class="font-bold"><sup>$</sup>{{ rate }}</span>
+                <span class="font-bold"><sup>$</sup>{{ rate < 0 ? ' -' : rate }}</span>
             </div>
         </div>
     </li>
