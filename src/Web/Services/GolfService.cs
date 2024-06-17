@@ -11,6 +11,7 @@ public class GolfService : IGolfService
     private readonly ITeeQuest _teeQuest;
     private readonly IChronoGolf _chronoGolf;
     private readonly IForeUp _foreUp;
+    private readonly IVermontSystems _vermontSystems;
     private readonly IOpenStreets _openStreets;
     private uint RADIUS = 30;
     private const double LATITUDE = 39.01470395078284;
@@ -23,6 +24,7 @@ public class GolfService : IGolfService
         ITeeQuest teeQuest,
         IChronoGolf chronoGolf,
         IForeUp foreUp,
+        IVermontSystems vermontSystems,
         IOpenStreets openStreets)
     {
         _greatLife = greatLife;
@@ -30,6 +32,7 @@ public class GolfService : IGolfService
         _teeQuest = teeQuest;
         _chronoGolf = chronoGolf;
         _foreUp = foreUp;
+        _vermontSystems = vermontSystems;
         _openStreets = openStreets;
     }
 
@@ -41,36 +44,27 @@ public class GolfService : IGolfService
         var greatLifeCourses = _greatLife.GetCourses();
         var teeQuestCourses = _teeQuest.GetCourses();
         var chronoCourses = _chronoGolf.GetCourses();
+        var vermontSystemCourses = _vermontSystems.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
             .Concat(greatLifeCourses)
             .Concat(teeQuestCourses)
-            .Concat(chronoCourses);
+            .Concat(chronoCourses)
+            .Concat(vermontSystemCourses);
     }
 
     public async Task<IEnumerable<TeeTime>> GetTeeTimes(Source source, string courseId, DateOnly date)
     {
-        if (source == Source.GreatLife)
+        return source switch
         {
-            return await _greatLife.GetTimes(courseId, date);
-        }
-
-        if (source == Source.GolfNow)
-        {
-            return await _golfNow.GetTimes(courseId, date);
-        }
-
-        if (source == Source.Chrono)
-        {
-            return await _chronoGolf.GetTimes(courseId, date);
-        }
-
-        if (source == Source.ForeUp)
-        {
-            return await _foreUp.GetTimes(courseId, date);
-        }
-
-        return await _teeQuest.GetTimes(courseId, date);
+            Source.GreatLife => await _greatLife.GetTimes(courseId, date),
+            Source.GolfNow => await _golfNow.GetTimes(courseId, date),
+            Source.Chrono => await _chronoGolf.GetTimes(courseId, date),
+            Source.ForeUp => await _foreUp.GetTimes(courseId, date),
+            Source.TeeQuest => await _teeQuest.GetTimes(courseId, date),
+            Source.VermontSystems => await _vermontSystems.GetTimes(courseId, date),
+            _ => Enumerable.Empty<TeeTime>()
+        };
     }
 
     private async Task<IDictionary<string, Coordinates>> GetZipCoordinates(HashSet<string> zips)
