@@ -40,6 +40,7 @@ builder.Services.AddHttpClient<IChronoGolf, ChronoGolf>(opt =>
 {
     opt.BaseAddress = new Uri("https://www.chronogolf.com");
 });
+builder.Services.AddHttpClient<IClubProphet, ClubProphet>();
 
 builder.Services.AddHttpClient<IForeUp, ForeUp>();
 

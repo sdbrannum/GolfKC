@@ -17,5 +17,6 @@ public enum Source
     TeeQuest = 3,
     Chrono = 4,
     ForeUp = 5,
-    VermontSystems = 6
+    VermontSystems = 6,
+    ClubProphet = 7
 }
