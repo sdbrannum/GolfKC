@@ -12,6 +12,7 @@ public class GolfService : IGolfService
     private readonly IChronoGolf _chronoGolf;
     private readonly IForeUp _foreUp;
     private readonly IVermontSystems _vermontSystems;
+    private readonly IClubProphet _clubProphet;
     private readonly IOpenStreets _openStreets;
     private uint RADIUS = 30;
     private const double LATITUDE = 39.01470395078284;
@@ -25,6 +26,7 @@ public class GolfService : IGolfService
         IChronoGolf chronoGolf,
         IForeUp foreUp,
         IVermontSystems vermontSystems,
+        IClubProphet clubProphet,
         IOpenStreets openStreets)
     {
         _golfBack = golfBack;
@@ -33,6 +35,7 @@ public class GolfService : IGolfService
         _chronoGolf = chronoGolf;
         _foreUp = foreUp;
         _vermontSystems = vermontSystems;
+        _clubProphet = clubProphet;
         _openStreets = openStreets;
     }
 
@@ -45,12 +48,14 @@ public class GolfService : IGolfService
         var teeQuestCourses = _teeQuest.GetCourses();
         var chronoCourses = _chronoGolf.GetCourses();
         var vermontSystemCourses = _vermontSystems.GetCourses();
+        var clubProphetCourses = _clubProphet.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
             .Concat(golfBackCourses)
             .Concat(teeQuestCourses)
             .Concat(chronoCourses)
-            .Concat(vermontSystemCourses);
+            .Concat(vermontSystemCourses)
+            .Concat(clubProphetCourses);
     }
 
     public async Task<IEnumerable<TeeTime>> GetTeeTimes(Source source, string courseId, DateOnly date)
@@ -63,6 +68,7 @@ public class GolfService : IGolfService
             Source.ForeUp => await _foreUp.GetTimes(courseId, date),
             Source.TeeQuest => await _teeQuest.GetTimes(courseId, date),
             Source.VermontSystems => await _vermontSystems.GetTimes(courseId, date),
+            Source.ClubProphet => await _clubProphet.GetTimes(courseId, date),
             _ => Enumerable.Empty<TeeTime>()
         };
     }
