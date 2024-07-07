@@ -16,14 +16,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\flag.png" />
-      <None Include="wwwroot\golfer.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-Cq4exliH.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\assets\index-C_6gCwnM.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>
