@@ -16,11 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\flag.png" />
-      <None Include="wwwroot\golfer.png" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

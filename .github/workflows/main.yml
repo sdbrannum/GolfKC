@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build images
-        run: docker compose -f docker-compose.action.yml build
+        run: docker buildx build --platform=linux/arm64 --tag ghcr.io/sdbrannum/golfkc-web:latest ../src/Web
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
@@ -28,6 +28,4 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Push images
-        run: docker compose -f docker-compose.action.yml push
-      # - name: Test with the dotnet CLI
-      #   run: dotnet test
+        run: docker push ghcr.io/sdbrannum/golfkc-web:latest
