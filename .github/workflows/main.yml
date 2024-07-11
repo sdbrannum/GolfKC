@@ -1,9 +1,8 @@
 name: 'main'
 on:
-  pull_request
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
 #   cancel-in-progress: true
@@ -22,11 +21,11 @@ jobs:
       - name: Build images
         working-directory: ./src/Web
         run: docker buildx build --platform=linux/arm64 --tag ghcr.io/sdbrannum/golfkc-web:latest .
-      # - name: Log in to the Container registry
-      #   uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-      #   with:
-      #     registry: ${{ env.REGISTRY }}
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-      # - name: Push images
-      #   run: docker push ghcr.io/sdbrannum/golfkc-web:latest
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push images
+        run: docker push ghcr.io/sdbrannum/golfkc-web:latest
