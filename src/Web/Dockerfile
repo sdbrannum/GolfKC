@@ -23,7 +23,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src/server
 COPY . .
 # RUN dotnet restore
-RUN dotnet publish "Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet restore -a $TARGETARCH
+RUN dotnet publish "Web.csproj" -a $TARGETARCH -c $BUILD_CONFIGURATION --no-restore -o /app/publish /p:UseAppHost=false
 RUN ls
 
 FROM base AS final
