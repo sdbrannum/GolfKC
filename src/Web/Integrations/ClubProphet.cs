@@ -38,11 +38,10 @@ public class ClubProphet : IClubProphet
         var cpsCourseId = idParts[1];
 
         var baseUri = new Uri($"https://{clubId}.cps.golf");
-        
-        var config =
-            await _httpClient.GetFromJsonAsync<ClubProphetConfig>(new Uri(baseUri, "onlineresweb/Home/Configuration"));
 
-        if (string.IsNullOrWhiteSpace(config?.ApiKey))
+        var config = await GetConfig(clubId);
+
+        if (string.IsNullOrWhiteSpace(config.ApiKey) || string.IsNullOrWhiteSpace(config.WebsiteId))
         {
             return Enumerable.Empty<TeeTime>();
         }
@@ -58,6 +57,7 @@ public class ClubProphet : IClubProphet
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, teeTimeUri);
         requestMessage.Headers.Add("x-apikey", config.ApiKey);
         requestMessage.Headers.Add("x-componentid", "1");
+        requestMessage.Headers.Add("x-websiteid", config.WebsiteId);
         var teeTimesResponse = await _httpClient.SendAsync(requestMessage);
 
         if (!teeTimesResponse.IsSuccessStatusCode)
@@ -68,5 +68,45 @@ public class ClubProphet : IClubProphet
         var teeTimes = await teeTimesResponse.Content.ReadFromJsonAsync<IEnumerable<ClubProphetTeeTime>>();
 
         return teeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+    }
+
+    private async Task<(string? ApiKey, string? WebsiteId)> GetConfig(string clubId)
+    {
+        var baseUri = new Uri($"https://{clubId}.cps.golf");
+        
+        var config = await FastCache.Cached.GetOrCompute(
+            $"clubprophet:{clubId}:config", 
+            (_) => _httpClient.GetFromJsonAsync<ClubProphetConfig>(new Uri(baseUri, "onlineresweb/Home/Configuration")),
+            TimeSpan.FromMinutes(3));
+
+        if (string.IsNullOrWhiteSpace(config?.ApiKey))
+        {
+            return (null, null);
+        }
+        
+        var options = await FastCache.Cached.GetOrCompute(
+            $"clubprophet:{clubId}:options",
+            (_) => GetOptions(clubId, config.ApiKey),
+            TimeSpan.FromMinutes(3));
+
+        return (config?.ApiKey, options?.WebsiteId);
+    }
+
+    private async Task<ClubProphetOptions?> GetOptions(string clubId, string apiKey)
+    {
+        var baseUri = new Uri($"https://{clubId}.cps.golf");
+        var optionsUri = new Uri(baseUri,
+            $"onlineres/onlineapi/api/v1/onlinereservation/GetAllOptions/{clubId}");
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Get, optionsUri);
+        requestMessage.Headers.Add("x-apikey", apiKey);
+        requestMessage.Headers.Add("x-componentid", "1");
+        var optionsResponse = await _httpClient.SendAsync(requestMessage);
+
+        if (!optionsResponse.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        return await optionsResponse.Content.ReadFromJsonAsync<ClubProphetOptions>();
     }
 }
