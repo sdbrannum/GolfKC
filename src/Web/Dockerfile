@@ -16,6 +16,7 @@ RUN pnpm build
 # RUN ls
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build-service
+ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 
 FROM build-service AS publish
