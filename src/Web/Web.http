@@ -1,6 +1,11 @@
 @Web_HostAddress = http://localhost:5091
 
-GET {{Web_HostAddress}}/weatherforecast/
+GET {{Web_HostAddress}}/courses
 Accept: application/json
 
 ###
+
+@source = 2
+@courseId = 857a12d4-a9cf-4a43-afe2-60940bdc7438
+GET {{Web_HostAddress}}/{{source}}/tee-times/{{courseId}}}}
+Accept: application/json
