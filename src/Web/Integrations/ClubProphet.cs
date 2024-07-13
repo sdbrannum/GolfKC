@@ -41,7 +41,7 @@ public class ClubProphet : IClubProphet
 
         var config = await GetConfig(clubId);
 
-        if (string.IsNullOrWhiteSpace(config.ApiKey) || string.IsNullOrWhiteSpace(config.WebsiteId))
+        if (string.IsNullOrWhiteSpace(config.ApiKey))
         {
             return Enumerable.Empty<TeeTime>();
         }
@@ -57,6 +57,7 @@ public class ClubProphet : IClubProphet
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, teeTimeUri);
         requestMessage.Headers.Add("x-apikey", config.ApiKey);
         requestMessage.Headers.Add("x-componentid", "1");
+        // website id will get us more tee times occasionally, i have no idea why
         requestMessage.Headers.Add("x-websiteid", config.WebsiteId);
         var teeTimesResponse = await _httpClient.SendAsync(requestMessage);
 
