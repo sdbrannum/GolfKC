@@ -73,7 +73,7 @@ public class TeeQuest : ITeeQuest
         {
             var priceContainer = teeTimeItem.QuerySelector(".price-container");
             var holesContainer = teeTimeItem.QuerySelector(".booking-desc");
-            var timeContainer = teeTimeItem.QuerySelector(".time-container");
+            var timeContainer = teeTimeItem.QuerySelector(".time-container [class^=time]");
             var playersItem = teeTimeItem.QuerySelector(":nth-last-child(1 of .available)");
 
             if (priceContainer is null ||
