@@ -78,7 +78,13 @@ app.MapGet("{source}/tee-times/{courseId}", [ResponseCache(Duration = 60)] async
         }
         
         var teeTimes = await service.GetTeeTimes(source, courseId, d);
-        return Results.Ok(teeTimes);
+
+        if (teeTimes.Failed)
+        {
+            return Results.Problem(teeTimes.Error);
+        }
+        
+        return Results.Ok(teeTimes.Data);
     })
     .WithName("tee-times")
     .WithOpenApi();

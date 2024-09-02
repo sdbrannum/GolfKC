@@ -19,7 +19,7 @@ public class GolfServiceCached : IGolfService
         TimeSpan.FromMinutes(60));
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTeeTimes(Source source, string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTeeTimes(Source source, string courseId, DateOnly date)
     {
         return await FastCache.Cached.GetOrCompute(
             $"{source}:{courseId}:times:{date.ToString("O")}", 

@@ -58,7 +58,7 @@ public class GolfService : IGolfService
             .Concat(clubProphetCourses);
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTeeTimes(Source source, string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTeeTimes(Source source, string courseId, DateOnly date)
     {
         return source switch
         {
@@ -69,7 +69,7 @@ public class GolfService : IGolfService
             Source.TeeQuest => await _teeQuest.GetTimes(courseId, date),
             Source.VermontSystems => await _vermontSystems.GetTimes(courseId, date),
             Source.ClubProphet => await _clubProphet.GetTimes(courseId, date),
-            _ => Enumerable.Empty<TeeTime>()
+            _ => Result<IEnumerable<TeeTime>>.Fail($"Unknown source: {source}")
         };
     }
 

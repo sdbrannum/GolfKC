@@ -33,7 +33,7 @@ public class GolfBack : IGolfBack
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var response = await _httpClient.PostAsJsonAsync($"api/v1/courses/{courseId}/date/{date.ToString("O")}/teetimes", new
         {
@@ -43,9 +43,11 @@ public class GolfBack : IGolfBack
         if (response.IsSuccessStatusCode)
         {
             var data = await response.Content.ReadFromJsonAsync<GolfBackTeeTimesResponse>();
-            return data?.TeeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+            var teeTimes = data?.TeeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Ok(teeTimes);
         }
-
-        return Enumerable.Empty<TeeTime>();
+        var res = await response.Content.ReadAsStringAsync();
+        return Result<IEnumerable<TeeTime>>.Fail(
+            $"GolfBack: Unable to retrieve tee times for {courseId}.  Responded with ${response.StatusCode}. ${res}");
     }
 }

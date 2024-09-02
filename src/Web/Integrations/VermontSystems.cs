@@ -30,7 +30,7 @@ public class VermontSystems : IVermontSystems
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var context = BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithDefaultCookies());
         var uri = QueryHelpers.AddQueryString($"https://web2.myvscloud.com/wbwsc/{courseId}/search.html", new Dictionary<string, string?>()
@@ -73,6 +73,6 @@ public class VermontSystems : IVermontSystems
             }
         }
 
-        return teeTimes;
+        return Result<IEnumerable<TeeTime>>.Ok(teeTimes);
     }
 }

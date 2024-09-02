@@ -36,7 +36,7 @@ public class GolfNow : IGolfNow
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var formattedDate = date.ToString("MMMM dd yyyy", new CultureInfo("en-us"));
         var response = await _httpClient.PostAsJsonAsync("api/tee-times/tee-time-results", new GolfNowTeeTimesRequest
@@ -50,14 +50,12 @@ public class GolfNow : IGolfNow
         if (response.IsSuccessStatusCode)
         {
             var data = await response.Content.ReadFromJsonAsync<GolfNowResponse>();
-            return data?.Data.TeeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+            var teeTimes = data?.Data.TeeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Ok(teeTimes);
         }
-        else
-        {
-            var res = await response.Content.ReadAsStringAsync();
-            throw new ApplicationException($"Unable to retrieve GolfNow {courseId} tee times.  Responded with ${response.StatusCode}. ${res}");
-        }
-
-        return Enumerable.Empty<TeeTime>();
+        
+        var res = await response.Content.ReadAsStringAsync();
+        return Result<IEnumerable<TeeTime>>.Fail(
+            $"GolfNow: Unable to retrieve tee times for {courseId}.  Responded with ${response.StatusCode}. ${res}");
     }
 }
