@@ -31,7 +31,7 @@ public class ClubProphet : IClubProphet
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var idParts = courseId.Split(':');
         var clubId = idParts[0];
@@ -43,7 +43,7 @@ public class ClubProphet : IClubProphet
 
         if (string.IsNullOrWhiteSpace(config.ApiKey))
         {
-            return Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Fail("ClubProphet: Unable to retrieve api key.");
         }
         
         var teeTimeUri = QueryHelpers.AddQueryString(
@@ -63,12 +63,15 @@ public class ClubProphet : IClubProphet
 
         if (!teeTimesResponse.IsSuccessStatusCode)
         {
-            return Enumerable.Empty<TeeTime>();
+            var res = await teeTimesResponse.Content.ReadAsStringAsync();
+            return Result<IEnumerable<TeeTime>>.Fail(
+                $"ClubProphet: Unable to retrieve tee times for {courseId}.  Responded with ${teeTimesResponse.StatusCode}. ${res}");
         }
 
         var teeTimes = await teeTimesResponse.Content.ReadFromJsonAsync<IEnumerable<ClubProphetTeeTime>>();
 
-        return teeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+        var mappedTeeTimes = teeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+        return Result<IEnumerable<TeeTime>>.Ok(mappedTeeTimes);
     }
 
     private async Task<(string? ApiKey, string? WebsiteId)> GetConfig(string clubId)

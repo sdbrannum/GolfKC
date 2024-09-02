@@ -39,12 +39,12 @@ public class ChronoGolf : IChronoGolf
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var course = _courseOptions.ChronoGolf.FirstOrDefault(c => c.Id == courseId);
         if (course is null)
         {
-            return Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Fail("ChronoGolf: Course is null");
         }
 
         var clubId = course.Id.Split('-')[0];
@@ -55,10 +55,11 @@ public class ChronoGolf : IChronoGolf
         var response = await _httpClient.GetFromJsonAsync<IEnumerable<ChronoTeeTime>>($"marketplace/clubs/{clubId}/teetimes?date={formattedDate}&course_id={chronoCourseId}&nb_holes=18&{playersQuery}&{playersQuery}&{playersQuery}&{playersQuery}");
         if (response is null)
         {
-            return Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Fail("ChronoGolf: Unable to retrieve tee times for {courseId}");
         }
 
-        return response.Where(tt => !tt.OutOfCapacity)
+        var mappedTeeTimes = response.Where(tt => !tt.OutOfCapacity)
             .Select(TeeTimesMapper.Map);
+        return Result<IEnumerable<TeeTime>>.Ok(mappedTeeTimes);
     }
 }

@@ -33,14 +33,14 @@ public class ForeUp : IForeUp
         });
     }
 
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         // we have parse the HTML and find the DEFAULT_FILTER to get the schedule_id for tee time requests
         var scheduleId = await GetScheduleId(courseId);
 
         if (scheduleId is null)
         {
-            return Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Fail($"ForeUp: Unable to retrieve schedule id for {courseId}.");
         }
         var queryParams = new Dictionary<string, string?>()
         {
@@ -55,10 +55,10 @@ public class ForeUp : IForeUp
 
         if (response is null)
         {
-            return Enumerable.Empty<TeeTime>();
+            return Result<IEnumerable<TeeTime>>.Fail($"ForeUp: Unable to retrieve tee times for {courseId}.");
         }
 
-        return response.Select(TeeTimesMapper.Map);
+        return Result<IEnumerable<TeeTime>>.Ok(response.Select(TeeTimesMapper.Map));
     }
 
     /// <summary>

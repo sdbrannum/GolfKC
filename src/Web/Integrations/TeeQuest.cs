@@ -44,12 +44,13 @@ public class TeeQuest : ITeeQuest
     ///     Example: https://teetimes.teequest.com/49
     /// </param>
     /// <returns></returns>
-    public async Task<IEnumerable<TeeTime>> GetTimes(string courseId, DateOnly date)
+    public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var courseIdParts = courseId.Split('-');
         var facilityId = courseIdParts[0];
 
-        return await GetTimesAngleSharp(facilityId, courseId, $"{date.ToString("M/d/yyyy")} 12:00:00 AM");
+        var result = await GetTimesAngleSharp(facilityId, courseId, $"{date.ToString("M/d/yyyy")} 12:00:00 AM");
+        return Result<IEnumerable<TeeTime>>.Ok(result);
     }
 
     private async Task<IEnumerable<TeeTime>> GetTimesAngleSharp(string facilityId, string courseId, string date)
