@@ -52,6 +52,11 @@ public class GolfNow : IGolfNow
             var data = await response.Content.ReadFromJsonAsync<GolfNowResponse>();
             return data?.Data.TeeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
         }
+        else
+        {
+            var res = await response.Content.ReadAsStringAsync();
+            throw new ApplicationException($"Unable to retrieve GolfNow {courseId} tee times.  Responded with ${response.StatusCode}. ${res}");
+        }
 
         return Enumerable.Empty<TeeTime>();
     }
