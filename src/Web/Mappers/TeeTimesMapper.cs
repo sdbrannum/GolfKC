@@ -87,4 +87,18 @@ public static class TeeTimesMapper
             Time = TimeOnly.FromDateTime(teeTime.StartTime),
         };
     }
+
+    public static TeeTime Map(TeeItUpTeeTime teeTime)
+    {
+        var centralDateTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(teeTime.Time, "Central Standard Time");
+        var rate = teeTime.Rates.MaxBy(r => r.Holes);
+        
+        return new TeeTime
+        {
+            Players = teeTime.MaxPlayers,
+            Time = TimeOnly.FromDateTime(centralDateTime),
+            Holes = rate?.Holes ?? -1,
+            Rate = (int)(rate?.GreenFeeCart ?? 0) / 100
+        };
+    }
 }

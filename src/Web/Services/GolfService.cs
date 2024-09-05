@@ -13,6 +13,7 @@ public class GolfService : IGolfService
     private readonly IForeUp _foreUp;
     private readonly IVermontSystems _vermontSystems;
     private readonly IClubProphet _clubProphet;
+    private readonly ITeeItUp _teeItUp;
     private readonly IOpenStreets _openStreets;
     private uint RADIUS = 30;
     private const double LATITUDE = 39.01470395078284;
@@ -27,6 +28,7 @@ public class GolfService : IGolfService
         IForeUp foreUp,
         IVermontSystems vermontSystems,
         IClubProphet clubProphet,
+        ITeeItUp teeItUp,
         IOpenStreets openStreets)
     {
         _golfBack = golfBack;
@@ -36,6 +38,7 @@ public class GolfService : IGolfService
         _foreUp = foreUp;
         _vermontSystems = vermontSystems;
         _clubProphet = clubProphet;
+        _teeItUp = teeItUp;
         _openStreets = openStreets;
     }
 
@@ -49,13 +52,15 @@ public class GolfService : IGolfService
         var chronoCourses = _chronoGolf.GetCourses();
         var vermontSystemCourses = _vermontSystems.GetCourses();
         var clubProphetCourses = _clubProphet.GetCourses();
+        var teeItUpCourses = _teeItUp.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
             .Concat(golfBackCourses)
             .Concat(teeQuestCourses)
             .Concat(chronoCourses)
             .Concat(vermontSystemCourses)
-            .Concat(clubProphetCourses);
+            .Concat(clubProphetCourses)
+            .Concat(teeItUpCourses);
     }
 
     public async Task<Result<IEnumerable<TeeTime>>> GetTeeTimes(Source source, string courseId, DateOnly date)
@@ -69,6 +74,7 @@ public class GolfService : IGolfService
             Source.TeeQuest => await _teeQuest.GetTimes(courseId, date),
             Source.VermontSystems => await _vermontSystems.GetTimes(courseId, date),
             Source.ClubProphet => await _clubProphet.GetTimes(courseId, date),
+            Source.TeeItUp => await _teeItUp.GetTimes(courseId, date),
             _ => Result<IEnumerable<TeeTime>>.Fail($"Unknown source: {source}")
         };
     }
