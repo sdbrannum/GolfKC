@@ -43,6 +43,10 @@ builder.Services.AddHttpClient<IChronoGolf, ChronoGolf>(opt =>
 builder.Services.AddHttpClient<IClubProphet, ClubProphet>();
 
 builder.Services.AddHttpClient<IForeUp, ForeUp>();
+builder.Services.AddHttpClient<ITeeItUp, TeeItUp>(opts =>
+{
+    opts.BaseAddress = new Uri("https://phx-api-be-east-1b.kenna.io");
+});
 
 builder.Services.AddScoped<IVermontSystems, VermontSystems>();
 builder.Services.AddScoped<ITeeQuest, TeeQuest>();
