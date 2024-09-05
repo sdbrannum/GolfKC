@@ -18,5 +18,6 @@ public enum Source
     Chrono = 4,
     ForeUp = 5,
     VermontSystems = 6,
-    ClubProphet = 7
+    ClubProphet = 7,
+    TeeItUp = 8
 }
