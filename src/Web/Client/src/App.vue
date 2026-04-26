@@ -42,7 +42,7 @@ const filtersOpen = ref(false);
         <nav
             class="bg-brand-700 border-b fixed top-0 left-0 right-0 flex items-center justify-between z-40 h-12 px-3 p-1"
         >
-            <h1 class="text-white font-semibold">Golf KC</h1>
+            <h1 class="text-white font-semibold">KC Golf</h1>
             <a href="https://github.com/sdbrannum/GolfKC" target="_blank">
                 <svg
                     class="w-6 h-6"
