@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getCourses } from "./api";
 import CourseCard from "./components/CourseCard.vue";
 import RadioButtons from "./components/RadioButtons.vue";
@@ -12,9 +12,32 @@ const minDateStr = minDate.toISOString().substring(0, 10);
 const maxDate = new Date(offset);
 maxDate.setDate(minDate.getDate() + 14);
 const maxDateStr = maxDate.toISOString().substring(0, 10);
-const date = ref(minDateStr);
+
+const getQueryParam = (key: string, fallback: string) => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(key) || fallback;
+};
+
+const date = ref(getQueryParam("date", minDateStr));
+const holesFilter = ref(getQueryParam("holes", "any"));
+const playersFilter = ref(getQueryParam("players", "any"));
+const filtersOpen = ref(false);
 
 const courses = ref<Course[]>([]);
+
+const updateQuery = () => {
+    const url = new URL(window.location.href);
+    if (date.value !== minDateStr) url.searchParams.set("date", date.value);
+    else url.searchParams.delete("date");
+    if (holesFilter.value !== "any") url.searchParams.set("holes", holesFilter.value);
+    else url.searchParams.delete("holes");
+    if (playersFilter.value !== "any") url.searchParams.set("players", playersFilter.value);
+    else url.searchParams.delete("players");
+    url.pathname = url.pathname.replace(/\/$/, "");
+    window.history.replaceState({}, "", url.toString());
+};
+
+watch([date, holesFilter, playersFilter], updateQuery);
 
 const loadCourses = async () => {
     const coursesResponse = await getCourses();
@@ -28,10 +51,6 @@ const loadCourses = async () => {
 };
 
 loadCourses();
-
-const holesFilter = ref("any");
-const playersFilter = ref("any");
-const filtersOpen = ref(false);
 </script>
 
 <template>
