@@ -53,6 +53,13 @@ public class VermontSystems : IVermontSystems
         });
         
         var queryDocument = await context.OpenAsync(uri);
+
+        var title = queryDocument.QuerySelector("title");
+        if (title?.TextContent?.Contains("Cloudflare", StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return Result<IEnumerable<TeeTime>>.Fail("VermontSystems: Cloudflare blocked");
+        }
+
         var timeRows = queryDocument.QuerySelectorAll("table tbody tr");
 
         var teeTimes = new List<TeeTime>();
