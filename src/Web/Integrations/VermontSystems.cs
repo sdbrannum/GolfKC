@@ -1,4 +1,6 @@
 using AngleSharp;
+using AngleSharp.Io;
+using AngleSharp.Io.Network;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Web.Dtos;
@@ -32,8 +34,15 @@ public class VermontSystems : IVermontSystems
 
     public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
-        var context = BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithDefaultCookies());
-        var uri = QueryHelpers.AddQueryString($"https://web2.myvscloud.com/wbwsc/{courseId}/search.html", new Dictionary<string, string?>()
+        // prevent Cloudflare error about bot detection and no cookies enabled
+        var handler = new HttpClientHandler();
+        var client = new HttpClient(handler);
+        client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+        client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+
+        var requester = new HttpClientRequester(client);
+        var context = BrowsingContext.New(Configuration.Default.With(requester).WithDefaultLoader().WithDefaultCookies());
+        var uri = QueryHelpers.AddQueryString($"https://{courseId}.myvscloud.com/webtrac/web/search.html", new Dictionary<string, string?>()
         {
             {"begindate", date.ToString("MM/dd/yyyy") },
             { "numberofholes", "18" },
@@ -42,6 +51,7 @@ public class VermontSystems : IVermontSystems
             { "module", "GR" },
             { "display", "Detail" }
         });
+        
         var queryDocument = await context.OpenAsync(uri);
         var timeRows = queryDocument.QuerySelectorAll("table tbody tr");
 
