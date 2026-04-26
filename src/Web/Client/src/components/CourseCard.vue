@@ -1,8 +1,4 @@
 <script setup lang="ts">
-// import { computed } from "vue";
-// import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-// import { faStar as faStarReg } from "@fortawesome/free-regular-svg-icons";
-// import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons'
 import TeeTimeList from "./TeeTimeList.vue";
 
 type CourseCardProps = {
@@ -17,13 +13,6 @@ type CourseCardProps = {
     holes: string;
 };
 defineProps<CourseCardProps>();
-
-// const mapUri = computed(() => {
-//     const query = encodeURIComponent(
-//         `${props.name} ${props.address.city} ${props.address.state}`
-//     );
-//     return `http://maps.google.com?q=${query}`;
-// });
 </script>
 
 <template>
@@ -48,11 +37,6 @@ defineProps<CourseCardProps>();
             :players="players"
             :holes="holes"
         />
-
-        <!--    <a target="_blank" :href="mapUri">-->
-        <!--      Directions-->
-        <!--      <font-awesome-icon :icon="faMap"/>-->
-        <!--    </a>-->
     </article>
 </template>
 
