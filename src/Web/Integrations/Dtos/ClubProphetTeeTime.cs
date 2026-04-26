@@ -2,6 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace Web.Integrations.Dtos;
 
+public class ClubProphetTeeTimesResponse
+{
+    public IEnumerable<ClubProphetTeeTime> Content { get; init; } = [];
+}
+
 public class ClubProphetTeeTime
 {
     public DateTime StartTime { get; init; }
