@@ -42,7 +42,15 @@ builder.Services.AddHttpClient<IChronoGolf, ChronoGolf>(opt =>
 });
 builder.Services.AddHttpClient<IClubProphet, ClubProphet>();
 
-builder.Services.AddHttpClient<IForeUp, ForeUp>();
+builder.Services.AddHttpClient<IForeUp, ForeUp>(opts =>
+    {
+        opts.DefaultRequestHeaders.Add("User-Agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
+        opts.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+    })
+    .AddStandardResilienceHandler();
+
+
 builder.Services.AddHttpClient<ITeeItUp, TeeItUp>(opts =>
 {
     opts.BaseAddress = new Uri("https://phx-api-be-east-1b.kenna.io");

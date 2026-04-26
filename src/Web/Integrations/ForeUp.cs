@@ -51,14 +51,22 @@ public class ForeUp : IForeUp
         };
 
         var apiUri = new Uri(QueryHelpers.AddQueryString(URI_API_TIMES, queryParams));
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<ForeUpTeeTime>>(apiUri);
+        var response = await _httpClient.GetAsync(apiUri);
 
-        if (response is null)
+        // foreup will return 401s on the first request sometimes, there is a resiliency policy on this client for that
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result<IEnumerable<TeeTime>>.Fail($"ForeUp: Unable to retrieve tee times for {courseId}.");
+        }
+        
+        var data = await response.Content.ReadFromJsonAsync<IEnumerable<ForeUpTeeTime>>();
+
+        if (data is null)
         {
             return Result<IEnumerable<TeeTime>>.Fail($"ForeUp: Unable to retrieve tee times for {courseId}.");
         }
 
-        return Result<IEnumerable<TeeTime>>.Ok(response.Select(TeeTimesMapper.Map));
+        return Result<IEnumerable<TeeTime>>.Ok(data.Select(TeeTimesMapper.Map));
     }
 
     /// <summary>

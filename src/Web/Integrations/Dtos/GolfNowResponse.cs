@@ -22,11 +22,11 @@ public class GolfNowTeeTime
     /// aka holes
     /// </summary>
     public string MultipleHolesRate { get; init; } = default!;
-    public int PlayerRule { get; init; }
-    public DateTime Time { get; init; }
-    public double MinTeeTimeRate { get; init; }
-    public double MaxTeeTimeRate { get; init; }
-    public double DisplayRate { get; init; }
+    public string PlayerRule { get; init; }
+    public GolfNowTime Time { get; init; }
+    public GolfNowRate MinTeeTimeRate { get; init; }
+    public GolfNowRate MaxTeeTimeRate { get; init; }
+    public GolfNowRate DisplayRate { get; init; }
     public string FormattedTime { get; init; } = default!;
     public string FormattedTimeMeridian { get; init; } = default!;
 }
@@ -53,7 +53,7 @@ public class GolfNowFacility
     public double MaxPrice { get; init; }
     public string ThumbnailImagePath { get; init; } = default!;
     public int NumberOfTeeTimes { get; init; }
-    public int GolfRange { get; init; }
+    public string? GolfRange { get; init; }
 }
 
 public class GolfNowFacilityAddress
@@ -65,4 +65,12 @@ public class GolfNowFacilityAddress
     public string PostalCode { get; init; } = default!;
     public string Country { get; init; } = default!;
     public string StateProvince { get; init; } = default!;
+}
+
+public class GolfNowTime {
+    public DateTime Date {get;init;}
+}
+
+public class GolfNowRate {
+    public Double Value {get;init;}
 }

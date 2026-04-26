@@ -12,6 +12,7 @@ const props = defineProps<{
     holes: string;
 }>();
 
+const error = ref(false);
 const loading = ref(false);
 const times = ref<TeeTime[]>([]);
 const filteredTimes = computed(() => {
@@ -29,9 +30,11 @@ const loadTeeTimes = async () => {
         return;
     }
     try {
+        error.value = false;
         loading.value = true;
         times.value = await getTimes(props.source, props.courseId, props.date);
     } catch {
+        error.value = true;
     } finally {
         loading.value = false;
     }
@@ -64,6 +67,14 @@ const getTeeTimeKey = (teeTime: TeeTime) => {
                 :key="getTeeTimeKey(teeTime)"
                 v-bind="teeTime"
             />
+        </template>
+        <template v-else-if="error">
+            <li>
+                <span>Error loading tee times</span>
+                <span class="text-sm block text-gray-300"
+                    >Please try refreshing</span
+                >
+            </li>
         </template>
         <template v-else>
             <li>
