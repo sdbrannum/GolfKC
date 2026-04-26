@@ -11,5 +11,8 @@ export const getCourses = async () => {
  */
 export const getTimes = async (source: string, id: string, date: string) => {
     const res = await fetch(`${source}/tee-times/${id}?date=${date}`);
+    if (res.status !== 200) {
+        throw new Error(`Error retrieving times for ${source} ${id}`);
+    }
     return await res.json() as TeeTime[];
 }

@@ -22,9 +22,9 @@ public static class TeeTimesMapper
     {
         return new TeeTime
         {
-            Rate = (int)Math.Ceiling(teeTime.DisplayRate),
-            Players = MapPlayersFromRule(teeTime.PlayerRule),
-            Time = TimeOnly.FromDateTime(teeTime.Time),
+            Rate = (int)Math.Ceiling(teeTime.DisplayRate.Value),
+            Players = 4,
+            Time = TimeOnly.FromDateTime(teeTime.Time.Date),
             Holes = int.Parse(teeTime.MultipleHolesRate)
         };
     }
@@ -37,19 +37,6 @@ public static class TeeTimesMapper
             Players = teeTime.GreenFees.Count(),
             Time = TimeOnly.Parse(teeTime.Time),
             Holes = 18
-        };
-    }
-
-    private static int MapPlayersFromRule(int playerRule)
-    {
-        return playerRule switch
-        {
-            1 => 1,
-            3 => 2,
-            7 => 3,
-            14 => 4,
-            15 => 4,
-            _ => playerRule
         };
     }
 

@@ -27,7 +27,7 @@ public class VermontSystems : IVermontSystems
             Id = c.Id,
             Name = c.Name,
             Address = c.Address,
-            Uri = new Uri($"https://web2.myvscloud.com/wbwsc/{c.Id}/search.html?display=Detail&module=GR"),
+            Uri = new Uri($"https://{c.Id}.myvscloud.com/webtrac/web/search.html?begintime=06%3A30+am&numberofholes=18&numberofplayers=4"),
             Source = Source.VermontSystems
         });
     }
@@ -44,10 +44,10 @@ public class VermontSystems : IVermontSystems
         var context = BrowsingContext.New(Configuration.Default.With(requester).WithDefaultLoader().WithDefaultCookies());
         var uri = QueryHelpers.AddQueryString($"https://{courseId}.myvscloud.com/webtrac/web/search.html", new Dictionary<string, string?>()
         {
-            {"begindate", date.ToString("MM/dd/yyyy") },
+            { "begindate", date.ToString("MM/dd/yyyy") },
             { "numberofholes", "18" },
             { "numberofplayers", "4" },
-            { "begintime", "6:00 am" },
+            { "begintime", "6:30 am" },
             { "module", "GR" },
             { "display", "Detail" }
         });
