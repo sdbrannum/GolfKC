@@ -1,7 +1,7 @@
-www.golfkc.xyz {
-	redir https://golfkc.xyz{uri}
+www.kcgolf.co {
+	redir https://kcgolf.co{uri}
 }
 
-golfkc.xyz {
+kcgolf.co {
     reverse_proxy web:8080
 }

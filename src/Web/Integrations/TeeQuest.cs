@@ -31,7 +31,7 @@ public class TeeQuest : ITeeQuest
             Id = c.Id,
             Name = c.Name,
             Address = c.Address,
-            Uri = new Uri($"https://teetimes.teequest.com/{c.Id.Split('-')[0]}"),
+            Uri = new Uri($"https://bookateetime.teequest.com/search/{c.Id}"),
             Source = Source.TeeQuest
         });
     }
