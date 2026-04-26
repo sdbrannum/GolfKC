@@ -53,7 +53,6 @@ public class VermontSystems : IVermontSystems
         });
         
         var queryDocument = await context.OpenAsync(uri);
-        var y = queryDocument.ToHtml();
         var timeRows = queryDocument.QuerySelectorAll("table tbody tr");
 
         var teeTimes = new List<TeeTime>();
