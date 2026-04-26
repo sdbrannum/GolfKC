@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Web.Dtos;
@@ -39,11 +41,18 @@ public class ClubProphet : IClubProphet
 
         var baseUri = new Uri($"https://{clubId}.cps.golf");
 
-        var config = await GetConfig(clubId);
+        var accessToken = await GetCachedAccessToken(clubId);
 
-        if (string.IsNullOrWhiteSpace(config.ApiKey))
+        if (string.IsNullOrWhiteSpace(accessToken))
         {
             return Result<IEnumerable<TeeTime>>.Fail("ClubProphet: Unable to retrieve api key.");
+        }
+        
+        var transactionId = await RegisterTransaction(clubId);
+
+        if (string.IsNullOrWhiteSpace(transactionId))
+        {
+            return Result<IEnumerable<TeeTime>>.Fail("ClubProphet: Unable to register transaction id.");       
         }
         
         var teeTimeUri = QueryHelpers.AddQueryString(
@@ -52,13 +61,13 @@ public class ClubProphet : IClubProphet
             {
                 { "courseIds", cpsCourseId },
                 { "searchDate", date.ToString("ddd MMM dd yyyy") },
+                { "transactionId", transactionId }
             });
 
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, teeTimeUri);
-        requestMessage.Headers.Add("x-apikey", config.ApiKey);
+        requestMessage.Headers.Add("Authorization", $"Bearer {accessToken}");
         requestMessage.Headers.Add("x-componentid", "1");
-        // website id will get us more tee times occasionally, i have no idea why
-        requestMessage.Headers.Add("x-websiteid", config.WebsiteId);
+        
         var teeTimesResponse = await _httpClient.SendAsync(requestMessage);
 
         if (!teeTimesResponse.IsSuccessStatusCode)
@@ -67,50 +76,66 @@ public class ClubProphet : IClubProphet
             return Result<IEnumerable<TeeTime>>.Fail(
                 $"ClubProphet: Unable to retrieve tee times for {courseId}.  Responded with ${teeTimesResponse.StatusCode}. ${res}");
         }
+        
+        var teeTimesContent = await teeTimesResponse.Content.ReadFromJsonAsync<ClubProphetTeeTimesResponse>();
 
-        var teeTimes = await teeTimesResponse.Content.ReadFromJsonAsync<IEnumerable<ClubProphetTeeTime>>();
-
-        var mappedTeeTimes = teeTimes?.Select(TeeTimesMapper.Map) ?? Enumerable.Empty<TeeTime>();
+        var mappedTeeTimes = teeTimesContent?.Content.Select(TeeTimesMapper.Map) ?? [];
         return Result<IEnumerable<TeeTime>>.Ok(mappedTeeTimes);
     }
 
-    private async Task<(string? ApiKey, string? WebsiteId)> GetConfig(string clubId)
+    private async Task<string?> GetCachedAccessToken(string clubId)
     {
-        var baseUri = new Uri($"https://{clubId}.cps.golf");
-        
-        var config = await FastCache.Cached.GetOrCompute(
-            $"clubprophet:{clubId}:config", 
-            (_) => _httpClient.GetFromJsonAsync<ClubProphetConfig>(new Uri(baseUri, "onlineresweb/Home/Configuration")),
+        var cacheKey = $"clubprophet:{clubId}:apikey";
+    
+        var apiKey = await FastCache.Cached.GetOrCompute(
+            cacheKey,
+            (_) => GetAccessToken(clubId),
             TimeSpan.FromMinutes(3));
-
-        if (string.IsNullOrWhiteSpace(config?.ApiKey))
-        {
-            return (null, null);
-        }
-        
-        var options = await FastCache.Cached.GetOrCompute(
-            $"clubprophet:{clubId}:options",
-            (_) => GetOptions(clubId, config.ApiKey),
-            TimeSpan.FromMinutes(3));
-
-        return (config?.ApiKey, options?.WebsiteId);
+    
+        return apiKey;
     }
 
-    private async Task<ClubProphetOptions?> GetOptions(string clubId, string apiKey)
+    private async Task<string?> GetAccessToken(string clubId)
     {
         var baseUri = new Uri($"https://{clubId}.cps.golf");
         var optionsUri = new Uri(baseUri,
-            $"onlineres/onlineapi/api/v1/onlinereservation/GetAllOptions/{clubId}");
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Get, optionsUri);
-        requestMessage.Headers.Add("x-apikey", apiKey);
-        requestMessage.Headers.Add("x-componentid", "1");
+            $"identityapi/myconnect/token/short");
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, optionsUri);
+        requestMessage.Content = new MultipartFormDataContent()
+        {
+            {new StringContent("onlinereswebshortlived"), "client_id"},
+        };
         var optionsResponse = await _httpClient.SendAsync(requestMessage);
+        if (!optionsResponse.IsSuccessStatusCode)
+        {
+            return null;
+        }
+    
+        var tokenResponse = await optionsResponse.Content.ReadFromJsonAsync<ClubProphetToken>();
+        return tokenResponse?.AccessToken;
+    }
 
+    private async Task<string?> RegisterTransaction(string clubId)
+    {
+        var transactionId = Guid.NewGuid().ToString();
+        var baseUri = new Uri($"https://{clubId}.cps.golf");
+        var transactionUri = new Uri(baseUri,
+            $"onlineres/onlineapi/api/v1/onlinereservation/RegisterTransactionId");
+        
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, transactionUri);
+        var transactionBody = new
+        {
+            transactionId = transactionId
+        };
+        requestMessage.Content = new StringContent(JsonSerializer.Serialize(transactionBody), Encoding.UTF8, "application/json");
+        requestMessage.Headers.Add("x-componentid", "1");
+            
+        var optionsResponse = await _httpClient.SendAsync(requestMessage);
         if (!optionsResponse.IsSuccessStatusCode)
         {
             return null;
         }
 
-        return await optionsResponse.Content.ReadFromJsonAsync<ClubProphetOptions>();
+        return transactionId;
     }
 }
