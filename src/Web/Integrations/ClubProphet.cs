@@ -76,11 +76,19 @@ public class ClubProphet : IClubProphet
             return Result<IEnumerable<TeeTime>>.Fail(
                 $"ClubProphet: Unable to retrieve tee times for {courseId}.  Responded with ${teeTimesResponse.StatusCode}. ${res}");
         }
-        
-        var teeTimesContent = await teeTimesResponse.Content.ReadFromJsonAsync<ClubProphetTeeTimesResponse>();
 
-        var mappedTeeTimes = teeTimesContent?.Content.Select(TeeTimesMapper.Map) ?? [];
-        return Result<IEnumerable<TeeTime>>.Ok(mappedTeeTimes);
+        var teeTimesContent = await teeTimesResponse.Content.ReadAsStringAsync();
+
+        try
+        {
+            var teeTimes = JsonSerializer.Deserialize<ClubProphetTeeTimesResponse>(teeTimesContent);
+            var mappedTeeTimes = teeTimes?.Content.Select(TeeTimesMapper.Map) ?? [];
+            return Result<IEnumerable<TeeTime>>.Ok(mappedTeeTimes);
+        }
+        catch (JsonException)
+        {
+            return Result<IEnumerable<TeeTime>>.Ok([]);
+        }
     }
 
     private async Task<string?> GetCachedAccessToken(string clubId)
