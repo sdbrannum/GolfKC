@@ -27,7 +27,7 @@ public class VermontSystems : IVermontSystems
             Id = c.Id,
             Name = c.Name,
             Address = c.Address,
-            Uri = new Uri($"https://{c.Id}.myvscloud.com/webtrac/web/search.html?begintime=06%3A30+am&numberofholes=18&numberofplayers=4"),
+            Uri = new Uri($"https://{c.Id}.myvscloud.com/webtrac/web/search.html?begintime=06%3A30+am&numberofholes=18&numberofplayers=4&module=gr"),
             Source = Source.VermontSystems
         });
     }
