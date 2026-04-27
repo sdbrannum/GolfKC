@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Web;
 using Web.Dtos;
 using Web.Integrations;
@@ -100,6 +101,14 @@ app.MapGet("{source}/tee-times/{courseId}", [ResponseCache(Duration = 60)] async
     })
     .WithName("tee-times")
     .WithOpenApi();
+
+app.MapGet("raw", async (string courseId, string date) =>
+{
+    var options = Options.Create<CourseOptions>(new CourseOptions());
+    var system = new VermontSystems(options);
+    var res = await system.GetRaw(courseId, DateOnly.Parse(date));
+    return Results.Ok(res);
+});
 
 app.MapRazorPages();
 app.Run();
