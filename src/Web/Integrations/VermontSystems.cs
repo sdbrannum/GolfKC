@@ -34,11 +34,20 @@ public class VermontSystems : IVermontSystems
 
     public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
-        // prevent Cloudflare error about bot detection and no cookies enabled
+        // Random delay to avoid rate limiting triggers that can lead to Cloudflare blocks
+        var random = new Random();
+        await Task.Delay(random.Next(500, 2000));
+
+        // Set up HTTP client with headers to mimic a real browser
+        // This helps avoid Cloudflare bot detection which blocks requests from cloud providers (OCI, AWS, etc.)
         var handler = new HttpClientHandler();
         var client = new HttpClient(handler);
         client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
         client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+        client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
+        client.DefaultRequestHeaders.Add("Connection", "keep-alive");
+        client.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
 
         var requester = new HttpClientRequester(client);
         var context = BrowsingContext.New(Configuration.Default.With(requester).WithDefaultLoader().WithDefaultCookies());
