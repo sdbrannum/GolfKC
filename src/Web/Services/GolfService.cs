@@ -14,6 +14,7 @@ public class GolfService : IGolfService
     private readonly IVermontSystems _vermontSystems;
     private readonly IClubProphet _clubProphet;
     private readonly ITeeItUp _teeItUp;
+    private readonly IGolfAccess _golfAccess;
     private readonly IOpenStreets _openStreets;
     private uint RADIUS = 30;
     private const double LATITUDE = 39.01470395078284;
@@ -29,6 +30,7 @@ public class GolfService : IGolfService
         IVermontSystems vermontSystems,
         IClubProphet clubProphet,
         ITeeItUp teeItUp,
+        IGolfAccess golfAccess,
         IOpenStreets openStreets)
     {
         _golfBack = golfBack;
@@ -39,6 +41,7 @@ public class GolfService : IGolfService
         _vermontSystems = vermontSystems;
         _clubProphet = clubProphet;
         _teeItUp = teeItUp;
+        _golfAccess = golfAccess;
         _openStreets = openStreets;
     }
 
@@ -53,6 +56,7 @@ public class GolfService : IGolfService
         var vermontSystemCourses = _vermontSystems.GetCourses();
         var clubProphetCourses = _clubProphet.GetCourses();
         var teeItUpCourses = _teeItUp.GetCourses();
+        var golfAccessCourses = _golfAccess.GetCourses();
 
         return golfNowCourses.Concat(foreUpCourses)
             .Concat(golfBackCourses)
@@ -60,7 +64,8 @@ public class GolfService : IGolfService
             .Concat(chronoCourses)
             .Concat(vermontSystemCourses)
             .Concat(clubProphetCourses)
-            .Concat(teeItUpCourses);
+            .Concat(teeItUpCourses)
+            .Concat(golfAccessCourses);
     }
 
     public async Task<Result<IEnumerable<TeeTime>>> GetTeeTimes(Source source, string courseId, DateOnly date)
@@ -75,6 +80,7 @@ public class GolfService : IGolfService
             Source.VermontSystems => await _vermontSystems.GetTimes(courseId, date),
             Source.ClubProphet => await _clubProphet.GetTimes(courseId, date),
             Source.TeeItUp => await _teeItUp.GetTimes(courseId, date),
+            Source.GolfAccess => await _golfAccess.GetTimes(courseId, date),
             _ => Result<IEnumerable<TeeTime>>.Fail($"Unknown source: {source}")
         };
     }
