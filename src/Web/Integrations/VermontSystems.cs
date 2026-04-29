@@ -62,7 +62,8 @@ public class VermontSystems : IVermontSystems
         });
         
         var queryDocument = await context.OpenAsync(uri);
-        return queryDocument.ToHtml();
+        var x = queryDocument.ToHtml();
+        return x;
     }
 
     public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)

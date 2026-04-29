@@ -107,7 +107,10 @@ app.MapGet("raw", async (string courseId, string date) =>
     var options = Options.Create<CourseOptions>(new CourseOptions());
     var system = new VermontSystems(options);
     var res = await system.GetRaw(courseId, DateOnly.Parse(date));
-    return Results.Ok(res);
+    return Results.Ok(new
+    {
+        Value = res
+    });
 });
 
 app.MapRazorPages();
