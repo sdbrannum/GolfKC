@@ -27,8 +27,8 @@ public class GolfAccess : IGolfAccess
             Id = c.Id,
             Name = c.Name,
             Address = c.Address,
-            Uri = new Uri($"https://golfwithaccess.com/course/{c.Name.ToLowerInvariant()}-golf-club/reserve-tee-time?players=4&startAt=0&endAt=24&date={kcTime:yyyy-dd-MM}"),
-            Source = Source.GolfBack
+            Uri = new Uri($"https://golfwithaccess.com/course/{c.Name.ToLowerInvariant()}-golf-club/reserve-tee-time?players=4&startAt=0&endAt=24&date={kcTime:yyyy-MM-dd}"),
+            Source = Source.GolfAccess
         });
     }
 
