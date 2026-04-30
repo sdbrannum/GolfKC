@@ -13,6 +13,7 @@ public class CourseOptions
     public IEnumerable<CourseOption> VermontSystems { get; init; } = new List<CourseOption>();
     public IEnumerable<CourseOption> ClubProphet { get; init; } = new List<CourseOption>();
     public IEnumerable<CourseOption> TeeItUp { get; init; } = new List<CourseOption>();
+    public IEnumerable<CourseOption> GolfAccess { get; init; } = new List<CourseOption>();
 
     public class CourseOption
     {

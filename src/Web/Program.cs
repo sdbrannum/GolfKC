@@ -57,6 +57,11 @@ builder.Services.AddHttpClient<ITeeItUp, TeeItUp>(opts =>
     opts.BaseAddress = new Uri("https://phx-api-be-east-1b.kenna.io");
 });
 
+builder.Services.AddHttpClient<IGolfAccess, GolfAccess>(opts =>
+{
+    opts.BaseAddress = new Uri("https://golfwithaccess.com");
+});
+
 builder.Services.AddScoped<IVermontSystems, VermontSystems>();
 builder.Services.AddScoped<ITeeQuest, TeeQuest>();
 builder.Services.AddScoped<IGolfService, GolfService>();
