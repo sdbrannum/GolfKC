@@ -62,7 +62,7 @@ builder.Services.AddHttpClient<IGolfAccess, GolfAccess>(opts =>
     opts.BaseAddress = new Uri("https://golfwithaccess.com");
 });
 
-builder.Services.AddScoped<IVermontSystems, VermontSystems>();
+builder.Services.AddScoped<IVermontSystems, VermontSystems2>();
 builder.Services.AddScoped<ITeeQuest, TeeQuest>();
 builder.Services.AddScoped<IGolfService, GolfService>();
 builder.Services.Decorate<IGolfService, GolfServiceCached>();
@@ -106,14 +106,6 @@ app.MapGet("{source}/tee-times/{courseId}", [ResponseCache(Duration = 60)] async
     })
     .WithName("tee-times")
     .WithOpenApi();
-
-app.MapGet("raw", async (string courseId, string date) =>
-{
-    var options = Options.Create<CourseOptions>(new CourseOptions());
-    var system = new VermontSystems(options);
-    var res = await system.GetRaw(courseId, DateOnly.Parse(date));
-    return Results.Ok(res);
-});
 
 app.MapRazorPages();
 app.Run();
