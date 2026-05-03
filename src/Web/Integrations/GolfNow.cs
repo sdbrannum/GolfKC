@@ -12,9 +12,6 @@ public interface IGolfNow : IGolfPlatform
 
 public class GolfNow : IGolfNow
 {
-    private uint RADIUS = 30;
-    private const double LATITUDE = 39.01470395078284;
-    private const double LONGITUDE = -94.69324882561136;
     private readonly HttpClient _httpClient;
     private readonly CourseOptions _courseOptions;
 
@@ -39,12 +36,9 @@ public class GolfNow : IGolfNow
     public async Task<Result<IEnumerable<TeeTime>>> GetTimes(string courseId, DateOnly date)
     {
         var formattedDate = date.ToString("MMMM dd yyyy", new CultureInfo("en-us"));
-        var response = await _httpClient.PostAsJsonAsync("api/tee-times/tee-time-results", new GolfNowTeeTimesRequest
+        var response = await _httpClient.PostAsJsonAsync("api/tee-times/tee-time-search-results", new GolfNowTeeTimesRequest
         {
             FacilityId = courseId,
-            Radius = RADIUS,
-            Latitude = LONGITUDE,
-            Longitude = LATITUDE,
             Date = formattedDate,
         });
         if (response.IsSuccessStatusCode)
